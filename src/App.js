@@ -7,7 +7,7 @@ import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
-    <Router basename="/">
+    <Router>
       {/* Router로 Routes감싸주기 */}
       <Routes>
         <Route path="/" element={<TodoPage />} />
