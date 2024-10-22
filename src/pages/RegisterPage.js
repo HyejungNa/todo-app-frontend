@@ -14,17 +14,29 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Validation check : all fields are filled
+    if (!name || !email || !password || !secPassword) {
+      setError("All fields are required. Please fill in all.");
+      return;
+    }
+    // Validation check : both passwords must match
+    if (password !== secPassword) {
+      setError("Password does not match. Please try again.");
+      return;
+    }
+
     try {
-      if (password !== secPassword) {
-        throw new Error("Password doesn't match. Please try again.");
-      }
       const response = await api.post("/user", {
         name,
         email,
         password,
       });
-      console.log("rrrrr:", response);
+      // console.log("rrrrr:", response);
+
+      // 회원가입 성공 시 로그인 페이지로 이동
       if (response.status === 200) {
+        alert("Registration successful!");
         navigate("/login");
       } else {
         throw new Error(response.data.error);
@@ -38,7 +50,7 @@ const RegisterPage = () => {
     <div className="display-center">
       {error && <div className="red-error">{error}</div>}
       <Form className="login-box" onSubmit={handleSubmit}>
-        <h1>회원가입</h1>
+        <h1>Sign up</h1>
         <Form.Group className="mb-3" controlId="formName">
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -76,7 +88,7 @@ const RegisterPage = () => {
         </Form.Group>
 
         <Button className="button-primary" type="submit">
-          회원가입
+          Sign up
         </Button>
       </Form>
     </div>
