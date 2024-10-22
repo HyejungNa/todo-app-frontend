@@ -2,17 +2,23 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import api from "../utils/api";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
+
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
+
+    if (!email || !password) {
+      setError("All fields are required. Please fill in all.");
+      return;
+    }
 
     try {
       const response = await api.post("/user/login", { email, password });
@@ -20,7 +26,7 @@ const LoginPage = () => {
         setUser(response.data.user);
         sessionStorage.setItem("token", response.data.token);
         api.defaults.headers["authorization"] = "Bearer " + response.data.token;
-        setError("");
+        alert("Login successful!");
         navigate("/");
       }
       throw new Error(response.message);
@@ -33,7 +39,7 @@ const LoginPage = () => {
     <div className="display-center">
       {error && <div className="red-error">{error}</div>}
       <Form className="login-box" onSubmit={handleLogin}>
-        <h1>로그인</h1>
+        <h1>Log in</h1>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control
@@ -56,7 +62,7 @@ const LoginPage = () => {
             Login
           </Button>
           <span>
-            계정이 없다면? <Link to="/register">회원가입 하기</Link>
+            Don't have an account? <Link to="/register">Sign up</Link>
           </span>
         </div>
       </Form>
